@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { UserNav } from "@/components/user-nav";
 import Link from "next/link";
 import { Providers } from "@/components/providers";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,6 +77,7 @@ export default async function RootLayout({
             </footer>
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
