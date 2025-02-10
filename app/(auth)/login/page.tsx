@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,18 +16,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function LoginPage() {
-  const router = useRouter();
+// SearchParamsHandler component to handle URL params
+function SearchParamsHandler({
+  setSuccess,
+}: {
+  setSuccess: (msg: string) => void;
+}) {
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     if (searchParams?.get("registered")) {
       setSuccess("Account created successfully! Please sign in.");
     }
-  }, [searchParams]);
+  }, [searchParams, setSuccess]);
+
+  return null;
+}
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,6 +72,9 @@ export default function LoginPage() {
 
   return (
     <div className="container flex h-screen w-screen mx-auto flex-col items-center justify-center">
+      <Suspense fallback={null}>
+        <SearchParamsHandler setSuccess={setSuccess} />
+      </Suspense>
       <Card className="w-full max-w-[400px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
