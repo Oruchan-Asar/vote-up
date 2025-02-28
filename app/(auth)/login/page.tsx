@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useEffect, Suspense, useState } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { loginUser } from "./actions";
+import { type State } from "@/lib/auth/types";
+import { Label } from "@/components/ui/label";
 
 // SearchParamsHandler component to handle URL params
 function SearchParamsHandler({
@@ -33,42 +37,32 @@ function SearchParamsHandler({
   return null;
 }
 
+// Submit button with loading state
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? "Signing in..." : "Sign in"}
+    </Button>
+  );
+}
+
 export default function LoginPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [state, setSuccess] = useState<string>("");
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
+  // Initialize form state with useActionState
+  const initialState: State = { status: "idle" };
+  const [formState, formAction] = useActionState(loginUser, initialState);
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Invalid email or password");
-        setIsLoading(false);
-        return;
-      }
-
+  // Handle successful login
+  useEffect(() => {
+    if (formState.status === "success") {
       router.push("/");
       router.refresh();
-    } catch {
-      setError("An error occurred. Please try again.");
-      setIsLoading(false);
     }
-  }
+  }, [formState, router]);
 
   return (
     <div className="container flex h-[calc(100vh-120px)] w-screen mx-auto flex-col items-center justify-center">
@@ -81,52 +75,50 @@ export default function LoginPage() {
 
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
-        <form onSubmit={onSubmit}>
+        <form action={formAction}>
           <CardContent className="space-y-4">
-            {error && (
-              <div className="text-sm font-medium text-red-500">{error}</div>
-            )}
-            {success && (
-              <div className="text-sm font-medium text-green-500">
-                {success}
+            {formState.status === "error" && (
+              <div className="text-sm font-medium text-red-500">
+                {formState.message}
               </div>
             )}
+            {state && (
+              <div className="text-sm font-medium text-green-500">{state}</div>
+            )}
             <div className="space-y-2">
-              <label
+              <Label
                 htmlFor="email"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Email
-              </label>
+              </Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 required
-                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <label
+              <Label
                 htmlFor="password"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Password
-              </label>
+              </Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
-                disabled={isLoading}
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
-            </Button>
+            <SubmitButton />
             <div className="text-sm text-center text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link

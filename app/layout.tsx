@@ -63,7 +63,7 @@ export default async function RootLayout({
             <footer className="border-t border-foreground/10 bg-background/50 backdrop-blur-sm">
               <div className="container mx-auto px-4 py-4">
                 <div className="text-center text-sm text-muted-foreground">
-                  2024 © Oruchan Asar
+                  2025 © Oruchan Asar
                 </div>
               </div>
             </footer>

@@ -1,18 +1,8 @@
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request });
-  const isAuthPage =
-    request.nextUrl.pathname.startsWith("/login") ||
-    request.nextUrl.pathname.startsWith("/register");
-
-  if (token && isAuthPage) {
-    // If user is signed in and trying to access auth pages, redirect to home
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
+export async function middleware() {
+  // For now, we'll just let all requests through
+  // In a real app, you would implement your own authentication check here
   return NextResponse.next();
 }
 

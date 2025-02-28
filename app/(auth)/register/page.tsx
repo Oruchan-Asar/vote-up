@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,43 +16,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { registerUser } from "./actions";
+import { type State } from "@/lib/auth/types";
+import { Label } from "@/components/ui/label";
+
+// Submit button with loading state
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? "Creating account..." : "Create account"}
+    </Button>
+  );
+}
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsLoading(true);
-    setError("");
+  // Initialize form state with useActionState
+  const initialState: State = { status: "idle" };
+  const [formState, formAction] = useActionState(registerUser, initialState);
 
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      // Redirect to login page after successful registration
+  // Handle successful registration
+  useEffect(() => {
+    if (formState.status === "success") {
       router.push("/login?registered=true");
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
     }
-  }
+  }, [formState, router]);
 
   return (
     <div className="container flex h-[calc(100vh-120px)] w-screen mx-auto flex-col items-center justify-center">
@@ -63,62 +56,62 @@ export default function RegisterPage() {
             Enter your details below to create your account
           </CardDescription>
         </CardHeader>
-        <form onSubmit={onSubmit}>
+        <form action={formAction}>
           <CardContent className="space-y-4">
-            {error && (
-              <div className="text-sm font-medium text-red-500">{error}</div>
+            {formState.status === "error" && (
+              <div className="text-sm font-medium text-red-500">
+                {formState.message}
+              </div>
             )}
             <div className="space-y-2">
-              <label
+              <Label
                 htmlFor="name"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Name
-              </label>
+              </Label>
               <Input
                 id="name"
                 name="name"
                 placeholder="John Doe"
+                autoComplete="name"
                 required
-                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <label
+              <Label
                 htmlFor="email"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Email
-              </label>
+              </Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 required
-                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <label
+              <Label
                 htmlFor="password"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Password
-              </label>
+              </Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="new-password"
                 required
-                disabled={isLoading}
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating account..." : "Create account"}
-            </Button>
+            <SubmitButton />
             <div className="text-sm text-center text-muted-foreground">
               Already have an account?{" "}
               <Link

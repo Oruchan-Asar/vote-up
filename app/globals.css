@@ -91,3 +91,14 @@ body {
     transform: translate(-50%, -40%) scale(1.5);
   }
 }
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
