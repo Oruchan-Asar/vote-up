@@ -53,7 +53,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="container flex h-screen w-screen mx-auto flex-col items-center justify-center">
+    <div className="container flex h-[calc(100vh-120px)] w-screen mx-auto flex-col items-center justify-center">
       <Card className="w-full max-w-[400px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">

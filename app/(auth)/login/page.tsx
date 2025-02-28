@@ -71,7 +71,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="container flex h-screen w-screen mx-auto flex-col items-center justify-center">
+    <div className="container flex h-[calc(100vh-120px)] w-screen mx-auto flex-col items-center justify-center">
       <Suspense fallback={null}>
         <SearchParamsHandler setSuccess={setSuccess} />
       </Suspense>
