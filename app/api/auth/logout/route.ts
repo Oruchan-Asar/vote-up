@@ -14,6 +14,7 @@ export async function POST() {
       value: "",
       expires: new Date(0),
       path: "/",
+      httpOnly: true,
     });
 
     // Clear the user info cookie
@@ -22,7 +23,10 @@ export async function POST() {
       value: "",
       expires: new Date(0),
       path: "/",
+      httpOnly: false, // Must be false to match the setting in login
     });
+
+    console.log("Cookies cleared on logout");
 
     return response;
   } catch (error) {

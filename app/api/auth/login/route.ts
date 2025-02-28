@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       message: "Login successful",
     });
 
-    // Set cookies in the response
+    // Set cookies in the response with more permissive settings for development
     response.cookies.set("auth-token", sessionToken, {
       expires,
       httpOnly: true,
@@ -65,20 +65,33 @@ export async function POST(request: Request) {
       sameSite: "lax",
     });
 
-    response.cookies.set(
-      "user-info",
-      JSON.stringify({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      }),
-      {
-        expires,
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      }
+    // Create a user info object with all necessary fields
+    const userInfo = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image || null,
+    };
+
+    // Set the user-info cookie with more permissive settings
+    response.cookies.set("user-info", JSON.stringify(userInfo), {
+      expires,
+      httpOnly: false, // Must be false to be accessible by JavaScript
+      path: "/",
+      secure: false, // Set to false for development
+      sameSite: "lax",
+    });
+
+    // Also set a JavaScript-accessible cookie directly in the response headers
+    // This is a fallback approach for development environments
+    response.headers.append(
+      "Set-Cookie",
+      `js-user-info=${encodeURIComponent(
+        JSON.stringify(userInfo)
+      )}; Path=/; Max-Age=${30 * 24 * 60 * 60}; SameSite=Lax`
     );
+
+    console.log("Setting user cookies for:", userInfo.email);
 
     return response;
   } catch (error) {

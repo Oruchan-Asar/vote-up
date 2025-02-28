@@ -51,6 +51,8 @@ function SubmitButton() {
 export default function LoginPage() {
   const router = useRouter();
   const [state, setSuccess] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Initialize form state with useActionState
   const initialState: State = { status: "idle" };
@@ -59,10 +61,39 @@ export default function LoginPage() {
   // Handle successful login
   useEffect(() => {
     if (formState.status === "success") {
-      router.push("/");
-      router.refresh();
+      // Manual login to ensure client-side storage works
+      fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            // Store user info in localStorage as a fallback
+            localStorage.setItem("user-info", JSON.stringify(data.user));
+            console.log("Stored user info in localStorage:", data.user);
+
+            // Also set a client-side cookie
+            document.cookie = `user-info=${encodeURIComponent(
+              JSON.stringify(data.user)
+            )};path=/;max-age=${30 * 24 * 60 * 60};SameSite=Lax`;
+
+            console.log("Set user-info cookie manually");
+          }
+        })
+        .catch((error) => {
+          console.error("Error in manual login:", error);
+        })
+        .finally(() => {
+          // Navigate to home page
+          router.push("/");
+          router.refresh();
+        });
     }
-  }, [formState, router]);
+  }, [formState, router, email, password]);
 
   return (
     <div className="container flex h-[calc(100vh-120px)] w-screen mx-auto flex-col items-center justify-center">
@@ -99,6 +130,8 @@ export default function LoginPage() {
                 placeholder="m@example.com"
                 autoComplete="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -114,6 +147,8 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </CardContent>

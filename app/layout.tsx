@@ -5,6 +5,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { Providers } from "@/components/providers";
 import { Analytics } from "@vercel/analytics/react";
+import { UserNav } from "@/components/user-nav";
+import { CookieDebugger } from "@/components/cookie-debugger";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,19 +44,7 @@ export default async function RootLayout({
                 </div>
                 <div className="flex items-center gap-4">
                   <ThemeToggle />
-
-                  <Link
-                    href="/register"
-                    className="text-sm font-medium hover:underline"
-                  >
-                    Register
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="text-sm font-medium hover:underline"
-                  >
-                    Login
-                  </Link>
+                  <UserNav />
                 </div>
               </div>
             </header>
@@ -68,6 +58,7 @@ export default async function RootLayout({
               </div>
             </footer>
           </div>
+          <CookieDebugger />
         </Providers>
         <Analytics />
       </body>

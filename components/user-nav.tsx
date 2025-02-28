@@ -13,41 +13,44 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-
-type User = {
-  name: string | null;
-  email: string | null;
-  image: string | null;
-};
+import { useAuth } from "@/lib/auth/useAuth";
+import { useEffect } from "react";
 
 export function UserNav() {
   const router = useRouter();
-  const [user] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading, logout } = useAuth();
 
   useEffect(() => {
-    // In a real app, you would fetch the user from your API or local storage
-    // For now, we'll just simulate no user being logged in
-    setIsLoading(false);
-  }, []);
+    // Log authentication status on component mount and when user changes
+    if (loading) {
+      console.log("UserNav: Authentication loading...");
+    } else if (user) {
+      console.log("UserNav: User authenticated:", user.name);
+    } else {
+      console.log("UserNav: No user authenticated");
+    }
+  }, [user, loading]);
 
-  if (isLoading) {
+  if (loading) {
     return null;
   }
 
   if (!user) {
     return (
-      <Button variant="outline" asChild>
-        <Link href="/login">Sign In</Link>
-      </Button>
+      <div className="flex items-center gap-4">
+        <Link href="/register" className="text-sm font-medium hover:underline">
+          Register
+        </Link>
+        <Link href="/login" className="text-sm font-medium hover:underline">
+          Login
+        </Link>
+      </div>
     );
   }
 
-  const handleSignOut = () => {
-    // In a real app, you would clear the user's session
-    // For now, we'll just redirect to the login page
-    router.push("/login");
+  const handleSignOut = async () => {
+    await logout();
+    router.refresh();
   };
 
   return (
@@ -55,7 +58,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.image || ""} alt={user.name || ""} />
+            <AvatarImage src={user.image || ""} alt={user.name} />
             <AvatarFallback>
               {user.name?.charAt(0) || user.email?.charAt(0)}
             </AvatarFallback>
