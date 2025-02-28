@@ -74,14 +74,11 @@ export default function LoginPage() {
           if (data.user) {
             // Store user info in localStorage as a fallback
             localStorage.setItem("user-info", JSON.stringify(data.user));
-            console.log("Stored user info in localStorage:", data.user);
 
             // Also set a client-side cookie
             document.cookie = `user-info=${encodeURIComponent(
               JSON.stringify(data.user)
             )};path=/;max-age=${30 * 24 * 60 * 60};SameSite=Lax`;
-
-            console.log("Set user-info cookie manually");
           }
         })
         .catch((error) => {

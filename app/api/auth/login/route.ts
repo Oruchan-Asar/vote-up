@@ -91,8 +91,6 @@ export async function POST(request: Request) {
       )}; Path=/; Max-Age=${30 * 24 * 60 * 60}; SameSite=Lax`
     );
 
-    console.log("Setting user cookies for:", userInfo.email);
-
     return response;
   } catch (error) {
     console.error("Login error:", error);

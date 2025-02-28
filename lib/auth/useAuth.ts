@@ -19,17 +19,14 @@ export function useAuth() {
   const getCookie = (name: string) => {
     try {
       const cookies = document.cookie.split(";");
-      console.log("All cookies:", cookies);
 
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         if (cookie.startsWith(name + "=")) {
           const cookieValue = cookie.substring(name.length + 1);
-          console.log(`Found ${name} cookie:`, cookieValue);
           return cookieValue;
         }
       }
-      console.log(`Cookie ${name} not found`);
       return null;
     } catch (error) {
       console.error("Error getting cookie:", error);
@@ -55,20 +52,17 @@ export function useAuth() {
         // 2. If not found, try the js-user-info cookie
         if (!userInfoValue) {
           userInfoValue = getCookie("js-user-info");
-          console.log("Checking js-user-info cookie:", userInfoValue);
         }
 
         // 3. If still not found, try localStorage
         if (!userInfoValue) {
           userInfoValue = localStorage.getItem("user-info");
-          console.log("Checking localStorage:", userInfoValue);
         }
 
         if (userInfoValue) {
           try {
             // Parse the user info
             const userInfo = JSON.parse(decodeURIComponent(userInfoValue));
-            console.log("User info parsed successfully:", userInfo);
 
             // Store in localStorage as fallback
             localStorage.setItem("user-info", JSON.stringify(userInfo));
@@ -87,7 +81,6 @@ export function useAuth() {
             setUser(null);
           }
         } else {
-          console.log("No user info found in any storage");
           setUser(null);
         }
       } catch (error) {

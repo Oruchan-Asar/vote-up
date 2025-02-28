@@ -14,22 +14,10 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/useAuth";
-import { useEffect } from "react";
 
 export function UserNav() {
   const router = useRouter();
   const { user, loading, logout } = useAuth();
-
-  useEffect(() => {
-    // Log authentication status on component mount and when user changes
-    if (loading) {
-      console.log("UserNav: Authentication loading...");
-    } else if (user) {
-      console.log("UserNav: User authenticated:", user.name);
-    } else {
-      console.log("UserNav: No user authenticated");
-    }
-  }, [user, loading]);
 
   if (loading) {
     return null;
