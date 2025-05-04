@@ -7,6 +7,7 @@ import { Providers } from "@/components/providers";
 import { Analytics } from "@vercel/analytics/react";
 import { UserNav } from "@/components/user-nav";
 import { CookieDebugger } from "@/components/cookie-debugger";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +50,7 @@ export default async function RootLayout({
               </div>
             </header>
             <main className="flex-1">{children}</main>
+            <Toaster />
             {/* Footer */}
             <footer className="border-t border-foreground/10 bg-background/50 backdrop-blur-sm">
               <div className="container mx-auto px-4 py-4">

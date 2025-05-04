@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 
 export default function CreateTopicPage() {
   const router = useRouter();
@@ -23,9 +24,38 @@ export default function CreateTopicPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // TODO: Implement API call to create topic
-    // For now, just redirect back to home page
-    router.push("/");
+    try {
+      const response = await fetch("/api/topics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          content: description,
+          passcode,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create topic");
+      }
+
+      await response.json();
+      toast({
+        title: "Success",
+        description: "Topic created successfully!",
+        variant: "default",
+      });
+      router.push("/");
+    } catch (error) {
+      console.error("Error creating topic:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create topic. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
