@@ -19,7 +19,6 @@ export default function CreateTopicPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [passcode, setPasscode] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +32,6 @@ export default function CreateTopicPage() {
         body: JSON.stringify({
           title,
           content: description,
-          passcode,
         }),
       });
 
@@ -98,23 +96,6 @@ export default function CreateTopicPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="passcode" className="text-sm font-medium">
-                  Passcode
-                </Label>
-                <Input
-                  id="passcode"
-                  type="text"
-                  placeholder="Enter a passcode for others to join"
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  required
-                />
-                <p className="text-sm text-muted-foreground">
-                  Share this passcode with others so they can join your topic
-                </p>
-              </div>
-
               <div className="flex gap-4">
                 <Link href="/" className="w-full">
                   <Button type="button" variant="outline" className="w-full">
@@ -124,7 +105,7 @@ export default function CreateTopicPage() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={!title || !description || !passcode}
+                  disabled={!title || !description}
                 >
                   Create Topic
                 </Button>

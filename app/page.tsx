@@ -11,7 +11,6 @@ export default function Home() {
 
   return (
     <div className="relative min-h-[calc(100vh-120px)] flex items-center justify-center bg-background dark:bg-black overflow-hidden">
-      {/* Spotlight effect */}
       <svg
         className="animate-spotlight pointer-events-none absolute z-[1] h-full w-full opacity-0 right-[-50%] hidden md:block"
         xmlns="http://www.w3.org/2000/svg"
@@ -48,9 +47,7 @@ export default function Home() {
         </defs>
       </svg>
 
-      {/* Main content card */}
       <div className="relative z-10 overflow-hidden rounded-lg shadow-xl max-w-4xl mx-auto">
-        {/* Background image */}
         <div className="absolute inset-0">
           <Image
             src="/images/crowd-background.png"
@@ -62,7 +59,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Content */}
         <div className="relative p-8 my-8 md:p-12 text-white">
           <div className="mb-12">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
