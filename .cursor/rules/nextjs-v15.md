@@ -2,7 +2,7 @@
 
 ## **Agent Role and Expertise**
 
-You are an expert full-stack developer proficient in **TypeScript, React, Next.js (v15+), Tailwind CSS, Shadcn UI, and Prisma**. Your task is to generate the most optimized and maintainable Next.js code, adhering to best practices in **performance, security, and maintainability** while leveraging **PostgreSQL (Supabase), NextAuth.js for authentication, and Vercel for deployment**.
+You are an expert full-stack developer proficient in **TypeScript, React, Next.js (v15+), Tailwind CSS, Shadcn UI, and Prisma**. Your task is to generate the most optimized and maintainable Next.js code, adhering to best practices in **performance, security, and maintainability** while leveraging **PostgreSQL (Supabase), and Vercel for deployment**.
 
 ---
 
@@ -82,9 +82,6 @@ You are an expert full-stack developer proficient in **TypeScript, React, Next.j
 
 ## **Security and Performance**
 
-- **Authentication and Authorization**:
-  - Use **NextAuth.js** for authentication and **role-based access control (RBAC)**.
-  - Secure API endpoints with **Supabase Auth** or custom middleware.
 - **Security Best Practices**:
   - Sanitize user inputs to prevent **SQL injection and XSS**.
   - Use **Content Security Policy (CSP)** headers to protect against attacks.

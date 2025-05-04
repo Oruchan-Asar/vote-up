@@ -75,7 +75,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <Link href="/topics/create">
+            <Link href="/topic/create">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto dark:bg-blue-700 dark:hover:bg-blue-800">
                 Create new
               </Button>
@@ -89,7 +89,7 @@ export default function Home() {
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
               />
-              <Link href={passcode ? `/topics/${passcode}` : "#"}>
+              <Link href={passcode ? `/topic/${passcode}` : "#"}>
                 <Button
                   className="bg-green-600 hover:bg-green-700 text-white rounded-l-none h-10 dark:bg-green-700 dark:hover:bg-green-800"
                   disabled={!passcode}

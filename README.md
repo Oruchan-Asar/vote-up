@@ -64,7 +64,6 @@ VoteUp is a dynamic web application that empowers communities to create, share, 
 - **Frontend Framework**: [Next.js](https://nextjs.org/) with TypeScript
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/) for beautiful and accessible components
-- **Authentication**: [Auth.js](https://next-auth.js.org/) (formerly NextAuth.js) for secure user authentication
 - **Database**: [PostgreSQL](https://www.postgresql.org/) hosted on [Supabase](https://supabase.com/)
 - **ORM**: [Prisma](https://www.prisma.io/) for type-safe database access
 - **Deployment**: Optimized for Vercel deployment
